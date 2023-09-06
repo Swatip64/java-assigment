@@ -1,0 +1,49 @@
+
+   <!DOCTYPE html>
+   <html>
+   <head>
+       <title>Login</title>
+   </head>
+   <body>
+       <h1>Login</h1>
+       <form id="loginForm">
+           <label for="login_id">Login ID:</label>
+           <input type="text" id="login_id" name="login_id" required><br><br>
+           <label for="password">Password:</label>
+           <input type="password" id="password" name="password" required><br><br>
+           <button type="button" onclick="authenticate()">Login</button>
+       </form>
+   
+       <script>
+           function authenticate() {
+               const loginId = document.getElementById("login_id").value;
+               const password = document.getElementById("password").value;
+   
+               // Make a POST request to the authentication API
+               fetch('https://qa2.sunbasedata.com/sunbase/portal/api/assignment_auth.jsp', {
+                   method: 'POST',
+                   headers: {
+                       'Content-Type': 'application/json'
+                   },
+                   body: JSON.stringify({
+                       "login_id": loginId,
+                       "password": password
+                   })
+               })
+               .then(response => response.json())
+               .then(data => {
+                   if (data.token) {
+                       // Store the Bearer token in local storage
+                       localStorage.setItem('token', data.token);
+                       // Redirect to the Customer List page
+                       window.location.href = 'customer_list.html';
+                   } else {
+                       alert('Authentication failed. Please check your credentials.');
+                   }
+               })
+               .catch(error => console.error('Authentication error:', error));
+           }
+       </script>
+   </body>
+   </html>
+
